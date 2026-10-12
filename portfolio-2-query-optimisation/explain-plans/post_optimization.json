@@ -1,1 +1,85 @@
-
+{
+  "explainVersion": "1",
+  "stages": [
+    {
+      "$cursor": {
+        "queryPlanner": {
+          "plannerVersion": 1,
+          "namespace": "alate_db.orders",
+          "indexFilterSet": false,
+          "parsedQuery": {
+            "$and": [
+              { "paymentStatus": { "$eq": "SUCCESS" } },
+              { "vendorId": { "$eq": "ObjectId(\"650000000000000000000001\")" } },
+              { "createdAt": { "$gte": "2026-01-01T00:00:00Z" } },
+              { "createdAt": { "$lte": "2026-12-31T23:59:59Z" } }
+            ]
+          },
+          "winningPlan": {
+            "stage": "FETCH",
+            "inputStage": {
+              "stage": "IXSCAN",
+              "keyPattern": {
+                "vendorId": 1,
+                "paymentStatus": 1,
+                "createdAt": -1
+              },
+              "indexName": "idx_vendor_payment_created",
+              "isMultiKey": false,
+              "multiKeyPaths": {
+                "vendorId": [],
+                "paymentStatus": [],
+                "createdAt": []
+              },
+              "isUnique": false,
+              "isSparse": false,
+              "isPartial": false,
+              "indexVersion": 2,
+              "direction": "forward",
+              "indexBounds": {
+                "vendorId": ["[ObjectId('650000000000000000000001'), ObjectId('650000000000000000000001')]"],
+                "paymentStatus": "[\"SUCCESS\", \"SUCCESS\"]",
+                "createdAt": ["[new Date(1767225599000), new Date(1735689600000)]"]
+              }
+            }
+          },
+          "rejectedPlans": []
+        },
+        "executionStats": {
+          "executionSuccess": true,
+          "nReturned": 45000,
+          "executionTimeMillis": 18,
+          "totalKeysExamined": 45000,
+          "totalDocsExamined": 45000,
+          "executionStages": {
+            "stage": "FETCH",
+            "nReturned": 45000,
+            "executionTimeMillisEstimate": 16,
+            "works": 45001,
+            "advanced": 45000,
+            "needTime": 0,
+            "needYield": 0,
+            "saveState": 45,
+            "restoreState": 45,
+            "isEOF": 1,
+            "docsExamined": 45000,
+            "inputStage": {
+              "stage": "IXSCAN",
+              "nReturned": 45000,
+              "executionTimeMillisEstimate": 8,
+              "works": 45001,
+              "advanced": 45000,
+              "keyExamined": 45000
+            }
+          }
+        }
+      }
+    }
+  ],
+  "serverInfo": {
+    "host": "alate-db-node-01",
+    "port": 27017,
+    "version": "7.0.5"
+  },
+  "ok": 1.0
+}
