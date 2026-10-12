@@ -1,1 +1,117 @@
-
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://alate.marketplace/portfolio-1-database-design/schemas/order.schema.json",
+  "title": "Order Schema",
+  "description": "Schema defining multi-store parent checkout orders with snapshot-embedded suborders.",
+  "type": "object",
+  "required": ["_id", "vendorId", "customerId", "orderNumber", "grandTotal", "status", "paymentStatus", "suborders"],
+  "properties": {
+    "_id": {
+      "type": "string",
+      "pattern": "^[0-9a-fA-F]{24}$"
+    },
+    "vendorId": {
+      "type": "string",
+      "pattern": "^[0-9a-fA-F]{24}$"
+    },
+    "customerId": {
+      "type": "string",
+      "pattern": "^[0-9a-fA-F]{24}$"
+    },
+    "orderNumber": { "type": "string" },
+    "grandTotal": {
+      "type": "number",
+      "minimum": 0
+    },
+    "status": {
+      "type": "string",
+      "enum": ["PENDING_PAYMENT", "PAID", "CANCELLED", "REFUNDED"]
+    },
+    "paymentStatus": {
+      "type": "string",
+      "enum": ["PENDING", "PROCESSING", "SUCCESS", "FAILED", "REVERSED"]
+    },
+    "suborders": {
+      "type": "array",
+      "minItems": 1,
+      "description": "Partitioned per seller store for isolated fulfillment workflows",
+      "items": {
+        "type": "object",
+        "required": ["_id", "storeId", "suborderNumber", "subtotal", "status", "fulfillmentType", "items", "shippingAddress"],
+        "properties": {
+          "_id": {
+            "type": "string",
+            "pattern": "^[0-9a-fA-F]{24}$"
+          },
+          "storeId": {
+            "type": "string",
+            "pattern": "^[0-9a-fA-F]{24}$"
+          },
+          "suborderNumber": { "type": "string" },
+          "subtotal": { "type": "number", "minimum": 0 },
+          "deliveryFee": { "type": "number", "minimum": 0, "default": 0 },
+          "status": {
+            "type": "string",
+            "enum": ["PLACED", "CONFIRMED", "PROCESSING", "PACKED", "READY", "DELIVERED", "CANCELLED"]
+          },
+          "fulfillmentType": {
+            "type": "string",
+            "enum": ["DELIVERY", "PICKUP"]
+          },
+          "items": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "required": ["productId", "productName", "quantity", "unitPrice"],
+              "properties": {
+                "productId": {
+                  "type": "string",
+                  "pattern": "^[0-9a-fA-F]{24}$"
+                },
+                "productName": { "type": "string" },
+                "quantity": { "type": "integer", "minimum": 1 },
+                "unitPrice": { "type": "number", "minimum": 0 }
+              },
+              "additionalProperties": false
+            }
+          },
+          "shippingAddress": {
+            "type": "object",
+            "required": ["contactName", "phone", "addressLine", "city"],
+            "properties": {
+              "contactName": { "type": "string" },
+              "phone": { "type": "string" },
+              "addressLine": { "type": "string" },
+              "city": { "type": "string" }
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "paymentTransaction": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["reference", "provider", "amount", "paidAt"],
+        "properties": {
+          "reference": { "type": "string" },
+          "provider": {
+            "type": "string",
+            "enum": ["PAYSTACK", "FLUTTERWAVE", "MONNIFY", "BANK_TRANSFER"]
+          },
+          "amount": { "type": "number", "minimum": 0 },
+          "paidAt": { "type": "string", "format": "date-time" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "additionalProperties": false
+}
