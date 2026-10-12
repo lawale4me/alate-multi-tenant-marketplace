@@ -1,1 +1,86 @@
-
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://alate.marketplace/portfolio-1-database-design/schemas/store.schema.json",
+  "title": "Store Schema",
+  "description": "Schema defining seller stores operating under a vendor marketplace context.",
+  "type": "object",
+  "required": ["_id", "vendorId", "ownerId", "storeName", "slug", "status", "subscription"],
+  "properties": {
+    "_id": {
+      "type": "string",
+      "pattern": "^[0-9a-fA-F]{24}$"
+    },
+    "vendorId": {
+      "type": "string",
+      "pattern": "^[0-9a-fA-F]{24}$"
+    },
+    "ownerId": {
+      "type": "string",
+      "pattern": "^[0-9a-fA-F]{24}$"
+    },
+    "storeName": {
+      "type": "string",
+      "minLength": 2
+    },
+    "slug": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["PENDING_APPROVAL", "ACTIVE", "SUSPENDED", "INACTIVE"]
+    },
+    "isOpen": {
+      "type": "boolean",
+      "default": true
+    },
+    "commissionRate": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 100,
+      "description": "Percentage platform fee deduction per sale"
+    },
+    "subscription": {
+      "type": "object",
+      "required": ["tier", "status"],
+      "properties": {
+        "tier": {
+          "type": "string",
+          "enum": ["FREE_STARTER", "GROWTH", "PRO", "ENTERPRISE"]
+        },
+        "status": {
+          "type": "string",
+          "enum": ["ACTIVE", "PAST_DUE", "CANCELLED", "EXPIRED"]
+        },
+        "nextBillingDate": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "additionalProperties": false
+    },
+    "staff": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["userId", "permissions"],
+        "properties": {
+          "userId": {
+            "type": "string",
+            "pattern": "^[0-9a-fA-F]{24}$"
+          },
+          "permissions": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "isActive": { "type": "boolean", "default": true }
+        },
+        "additionalProperties": false
+      }
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "additionalProperties": false
+}
