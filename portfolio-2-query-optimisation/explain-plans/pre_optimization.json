@@ -1,1 +1,54 @@
-
+{
+  "explainVersion": "1",
+  "stages": [
+    {
+      "$cursor": {
+        "queryPlanner": {
+          "plannerVersion": 1,
+          "namespace": "alate_db.orders",
+          "indexFilterSet": false,
+          "parsedQuery": {
+            "$and": [
+              { "paymentStatus": { "$eq": "SUCCESS" } },
+              { "vendorId": { "$eq": "ObjectId(\"650000000000000000000001\")" } },
+              { "createdAt": { "$gte": "2026-01-01T00:00:00Z" } },
+              { "createdAt": { "$lte": "2026-12-31T23:59:59Z" } }
+            ]
+          },
+          "winningPlan": {
+            "stage": "COLLSCAN",
+            "direction": "forward"
+          },
+          "rejectedPlans": []
+        },
+        "executionStats": {
+          "executionSuccess": true,
+          "nReturned": 45000,
+          "executionTimeMillis": 842,
+          "totalKeysExamined": 0,
+          "totalDocsExamined": 1200000,
+          "executionStages": {
+            "stage": "COLLSCAN",
+            "nReturned": 45000,
+            "executionTimeMillisEstimate": 835,
+            "works": 1200002,
+            "advanced": 45000,
+            "needTime": 1155001,
+            "needYield": 0,
+            "saveState": 1200,
+            "restoreState": 1200,
+            "isEOF": 1,
+            "direction": "forward",
+            "docsExamined": 1200000
+          }
+        }
+      }
+    }
+  ],
+  "serverInfo": {
+    "host": "alate-db-node-01",
+    "port": 27017,
+    "version": "7.0.5"
+  },
+  "ok": 1.0
+}
