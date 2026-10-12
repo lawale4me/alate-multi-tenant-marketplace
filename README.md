@@ -1,7 +1,7 @@
-# alate-multi-tenant-marketplace
+# Alate Multi-Tenant Marketplace Backend Core
+
 Multi-tenant marketplace database portfolio covering MongoDB schemas, query optimization, transactions, Redis reservations, and distributed deployment.
 
-# Alate Multi-Tenant Marketplace Backend Core
 
 ## System Overview
 Alate operates as a **Modular Monolith** backend attached to a shared **MongoDB** instance and **Redis** operational cache. Multi-tenancy is enforced logically using mandatory `vendorId` context injection on every request.
