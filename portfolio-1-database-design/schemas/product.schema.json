@@ -1,1 +1,71 @@
-
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://alate.marketplace/portfolio-1-database-design/schemas/product.schema.json",
+  "title": "Product Schema",
+  "description": "Schema defining store catalog items with stock threshold controls.",
+  "type": "object",
+  "required": ["_id", "vendorId", "storeId", "name", "price", "status", "inventory"],
+  "properties": {
+    "_id": {
+      "type": "string",
+      "pattern": "^[0-9a-fA-F]{24}$"
+    },
+    "vendorId": {
+      "type": "string",
+      "pattern": "^[0-9a-fA-F]{24}$"
+    },
+    "storeId": {
+      "type": "string",
+      "pattern": "^[0-9a-fA-F]{24}$"
+    },
+    "categoryId": {
+      "type": "string",
+      "pattern": "^[0-9a-fA-F]{24}$"
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "barcode": { "type": "string" },
+    "sku": { "type": "string" },
+    "price": {
+      "type": "number",
+      "minimum": 0
+    },
+    "unit": {
+      "type": "string",
+      "example": "pcs"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["DRAFT", "ACTIVE", "ARCHIVED", "OUT_OF_STOCK"]
+    },
+    "isAvailable": {
+      "type": "boolean",
+      "default": true
+    },
+    "images": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["url", "displayOrder"],
+        "properties": {
+          "url": { "type": "string", "format": "uri" },
+          "displayOrder": { "type": "integer", "minimum": 0 }
+        },
+        "additionalProperties": false
+      }
+    },
+    "inventory": {
+      "type": "object",
+      "required": ["availableStock", "reservedStock"],
+      "properties": {
+        "availableStock": { "type": "integer", "minimum": 0 },
+        "reservedStock": { "type": "integer", "minimum": 0 },
+        "safetyThreshold": { "type": "integer", "minimum": 0, "default": 5 }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}
